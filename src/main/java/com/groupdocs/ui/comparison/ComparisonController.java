@@ -250,6 +250,15 @@ public class ComparisonController {
         return comparisonService.loadResultPage(loadResultPageRequest);
     }
 
+    /**
+     * Compare 2 files got by different ways
+     *
+     * @param files files data
+     * @param passwords files passwords
+     * @param urls files url and password
+     * @param paths files path and password
+     * @return response with compare results
+     */
     @RequestMapping(method = RequestMethod.POST, value = "/compare",
             consumes = MULTIPART_FORM_DATA_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -287,6 +296,15 @@ public class ComparisonController {
         }
     }
 
+    /**
+     * Compare several files got by different ways
+     *
+     * @param files files data
+     * @param passwords files passwords
+     * @param urls files url and password
+     * @param paths files path and password
+     * @return response with compare results
+     */
     @RequestMapping(method = RequestMethod.POST, value = "/multiCompare",
             consumes = MULTIPART_FORM_DATA_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
