@@ -47,8 +47,8 @@ Coming soon
 4. Update parameters in `configuration.yml` to meet your requirements.
 5. Open console and type `cd 'GroupDocs.Comparison for Java Spring Sample root directory'`, press enter.
 6. From console type following command: `mvn clean spring-boot:run`, press enter.
-7. Go to `http://localhost:{PORT}/`.
-PORT - port number specified in `configuration.yml` (by default http://localhost:8080).
+7. Go to `http://localhost:{PORT}/comparison`.
+PORT - port number specified in `configuration.yml` (by default http://localhost:8080/comparison).
 
 
 ## Resources
