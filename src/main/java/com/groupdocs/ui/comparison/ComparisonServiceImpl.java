@@ -59,6 +59,16 @@ public class ComparisonServiceImpl implements ComparisonService {
      */
     @PostConstruct
     public void init() {
+        // check files directories
+        if (StringUtils.isEmpty(comparisonConfiguration.getFilesDirectory())) {
+            logger.error("Files directory must be specified!");
+            throw new IllegalStateException("Files directory must be specified!");
+        } else {
+            new File(comparisonConfiguration.getFilesDirectory()).mkdirs();
+            if (!StringUtils.isEmpty(comparisonConfiguration.getResultDirectory())) {
+                new File(comparisonConfiguration.getResultDirectory()).mkdirs();
+            }
+        }
         // set GroupDocs license
         try {
             License license = new License();
@@ -238,7 +248,7 @@ public class ComparisonServiceImpl implements ComparisonService {
     public String calculateResultFileName(String documentGuid, Integer index, String ext) {
         // configure file name for results
         String resultDirectory = StringUtils.isEmpty(comparisonConfiguration.getResultDirectory()) ? comparisonConfiguration.getFilesDirectory() : comparisonConfiguration.getResultDirectory();
-        String extension = ext != null ? getRightExt(ext) : "";
+        String extension = ext != null ? getRightExt(ext.toLowerCase()) : "";
         // for images of pages specify index, for all result pages file specify "all" prefix
         String idx = index == null ? "all." : index.toString() + ".";
         String suffix = idx + extension;
@@ -252,7 +262,7 @@ public class ComparisonServiceImpl implements ComparisonService {
     public boolean checkFiles(String firstFile, String secondFile) {
         String extension = FilenameUtils.getExtension(firstFile);
         // check if files extensions are the same and support format file
-        return extension.equals(FilenameUtils.getExtension(secondFile)) && checkSupportedFiles(extension);
+        return extension.equals(FilenameUtils.getExtension(secondFile)) && checkSupportedFiles(extension.toLowerCase());
     }
 
     /**
