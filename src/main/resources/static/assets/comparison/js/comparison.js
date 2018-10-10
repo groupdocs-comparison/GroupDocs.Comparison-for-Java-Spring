@@ -1163,28 +1163,28 @@ function addFileForUploading(uploadFiles, url) {
     if(url){
         // append URL
         table.append('<div class="swiper-container">'+
-            '<div class="swiper-wrapper">'+
-            '<div class="swiper-slide">'+
-            '<i class="fa ' + getDocumentFormat(url.split('/').pop()).icon + '"></i>'+
-            '<div class="gd-filetree-name" data-uploaded="false" data-value="' + url + '">'+
-            '<div class="gd-file-name">' + url.split('/').pop() + '</div>'+
-            '<span id="gd-upload-size"> type: ' + url.split('/').pop().split('.').pop() +'</span>'+
-            '</div>'+
-            '<div id="gd-pregress-bar-' + tableRowsNumber + '" class="gd-pregress p0 small green">'+
-            '<div class="slice">'+
-            '<div class="bar"></div>'+
-            '<div class="fill"></div>'+
-            '</div>'+
-            '</div>'+
-            '<div id="gd-upload-complete-' + tableRowsNumber + '" class="gd-upload-complete"><i class="fa fa-check-circle"></i></div>'+
-            '<div id="gd-upload-failure-' + tableRowsNumber + '" class="gd-upload-complete-fail"><i class="fa fa-exclamation-circle"></i></div>'+
-            '</div>'+
-            '<div class="swiper-slide gd-desktop swiper-slide-cancel">'+
-            '<div class="files-table-remove">'+
-            '<button class="btn gd-cancel-button"><i class="fa fa-trash"></i></button>'+
-            '</div>'+
-            '</div>'+
-            '</div>'+
+                '<div class="swiper-wrapper">'+
+                    '<div class="swiper-slide">'+
+                        '<i class="fa ' + getDocumentFormat(url.split('/').pop()).icon + '"></i>'+
+                        '<div class="gd-filetree-name" data-uploaded="false" data-value="' + url + '">'+
+                            '<div class="gd-file-name">' + url.split('/').pop() + '</div>'+
+                            '<span id="gd-upload-size"> type: ' + url.split('/').pop().split('.').pop() +'</span>'+
+                        '</div>'+
+                        '<div id="gd-pregress-bar-' + tableRowsNumber + '" class="gd-pregress p0 small green gd-upload-status">'+
+                            '<div class="slice">'+
+                                '<div class="bar"></div>'+
+                                '<div class="fill"></div>'+
+                            '</div>'+
+                        '</div>'+
+                        '<div id="gd-upload-complete-' + tableRowsNumber + '" class="gd-upload-complete gd-upload-status"><i class="fa fa-check-circle"></i></div>'+
+                        '<div id="gd-upload-failure-' + tableRowsNumber + '" class="gd-upload-complete-fail gd-upload-status"><i class="fa fa-exclamation-circle"></i></div>'+
+                    '</div>'+
+                    '<div class="swiper-slide gd-desktop swiper-slide-cancel">'+
+                        '<div class="files-table-remove">'+
+                            '<button class="btn gd-cancel-button"><i class="fa fa-trash"></i></button>'+
+                        '</div>'+
+                    '</div>'+
+                '</div>'+
             '</div>');
         // increase table rows counter after adding new record
         tableRowsNumber++
@@ -1203,30 +1203,30 @@ function addFileForUploading(uploadFiles, url) {
             }
             // append document
             table.append('<div class="swiper-container">'+
-                '<div class="swiper-wrapper">'+
-                '<div class="swiper-slide">'+
-                '<i class="fa ' + docFormat.icon + '"></i>'+
-                '<div class="gd-filetree-name" data-uploaded="false">'+
-                '<div class="gd-file-name">' + file.name + '</div>'+
-                '<span id="gd-upload-size">size: ' + new_size +'</span>'+
-                '<span id="gd-upload-size"> type: ' + file.name.split('.').pop() +'</span>'+
-                '</div>'+
-                '<div id="gd-pregress-bar-' + tableRowsNumber + '" class="gd-pregress p0 small green">'+
-                '<div class="slice">'+
-                '<div class="bar"></div>'+
-                '<div class="fill"></div>'+
-                '</div>'+
-                '</div>'+
-                '<div id="gd-upload-complete-' + tableRowsNumber + '" class="gd-upload-complete"><i class="fa fa-check-circle"></i></div>'+
-                '<div id="gd-upload-failure-' + tableRowsNumber + '" class="gd-upload-complete-fail"><i class="fa fa-exclamation-circle"></i></div>'+
-                '</div>'+
-                '<div class="swiper-slide gd-desktop swiper-slide-cancel">'+
-                '<div class="files-table-remove">'+
-                '<button class="btn gd-cancel-button"><i class="fa fa-trash"></i> Remove</button>'+
-                '</div>'+
-                '</div>'+
-                '</div>'+
-                '</div>');
+                            '<div class="swiper-wrapper">'+
+                                '<div class="swiper-slide">'+
+                                    '<i class="fa ' + docFormat.icon + '"></i>'+
+                                    '<div class="gd-filetree-name" data-uploaded="false">'+
+                                        '<div class="gd-file-name">' + file.name + '</div>'+
+                                        '<span id="gd-upload-size">size: ' + new_size +'</span>'+
+                                        '<span id="gd-upload-size"> type: ' + file.name.split('.').pop() +'</span>'+
+                                    '</div>'+
+                                    '<div id="gd-pregress-bar-' + tableRowsNumber + '" class="gd-pregress p0 small green gd-upload-status">'+
+                                        '<div class="slice">'+
+                                            '<div class="bar"></div>'+
+                                            '<div class="fill"></div>'+
+                                        '</div>'+
+                                    '</div>'+
+                                    '<div id="gd-upload-complete-' + tableRowsNumber + '" class="gd-upload-complete gd-upload-status"><i class="fa fa-check-circle"></i></div>'+
+                                    '<div id="gd-upload-failure-' + tableRowsNumber + '" class="gd-upload-complete-fail gd-upload-status"><i class="fa fa-exclamation-circle"></i></div>'+
+                                '</div>'+
+                                '<div class="swiper-slide gd-desktop swiper-slide-cancel">'+
+                                    '<div class="files-table-remove">'+
+                                        '<button class="btn gd-cancel-button"><i class="fa fa-trash"></i> Remove</button>'+
+                                    '</div>'+
+                                '</div>'+
+                            '</div>'+
+                        '</div>');
             // increase table rows counter after adding new record
             tableRowsNumber++
         });
@@ -1443,10 +1443,12 @@ function uploadDocument(file, index, url = ''){
             }
         },
         error: function(xhr, status, error) {
-            var err = eval("(" + xhr.responseText + ")");
-            console.log(err.message);
-            // open error popup
-            printMessage(err.message);
+            if (xhr && xhr.responseText) {
+                var err = eval("(" + xhr.responseText + ")");
+                console.log(err.message);
+                // open error popup
+                printMessage(err.message);
+            }
             $("#gd-upload-complete-" + index).fadeOut();
             $("#gd-upload-failure-" + index).fadeIn();
         }
@@ -1529,26 +1531,26 @@ function uploadDocument(file, index, url = ''){
 
         // drag and drop section
         var htmlSection = '<section id="gd-upload-section-' + prefix + '" class="tab-slider-body">'+
-            close +
-            '<div class="gd-drag-n-drop-wrap-compare" id="gd-dropZone-' + prefix + '">'+
-                '<div class="gd-drag-n-drop-icon"><i class="fas fa-cloud-download-alt fa-5x" aria-hidden="true"></i></div>'+
-                '<h2>Drag &amp; Drop the ' + replacePrefix(prefix) + ' file here</h2>'+
-                '<h4>OR</h4>'+
-                '<div class="gd-drag-n-drop-buttons">'+
-                    '<label class="btn btn-primary gd-upload-section-label">'+
-                        '<i class="fas fa-file"></i>'+
-                        'SELECT FILE'+
-                        '<input id="gd-upload-input-' + prefix + '" type="file" multiple style="display: none;">'+
-                    '</label>'+
-                    '<label class="btn gd-upload-section-label" id="gd-url-button-' + prefix + '">'+
-                        '<i class="fas fa-link"></i>'+
-                        'URL'+
-                    '</label>'+
-                '</div>'+
-                 '<div class="gd-browse-document gd-modal-buttons" id="gd-open-document-' + prefix + '">'+
-                    '<i class="fas fa-folder-open"></i>BROWSE files'+
-                '</div>'+
-            '</div>'+
+                            close +
+                            '<div class="gd-drag-n-drop-wrap-compare" id="gd-dropZone-' + prefix + '">'+
+                                '<div class="gd-drag-n-drop-icon"><i class="fas fa-cloud-download-alt fa-5x" aria-hidden="true"></i></div>'+
+                                '<h2>Drag &amp; Drop the ' + replacePrefix(prefix) + ' file here</h2>'+
+                                '<h4>OR</h4>'+
+                                '<div class="gd-drag-n-drop-buttons">'+
+                                    '<label class="btn btn-primary gd-upload-section-label">'+
+                                        '<i class="fas fa-file"></i>'+
+                                        'SELECT FILE'+
+                                        '<input id="gd-upload-input-' + prefix + '" type="file" multiple style="display: none;">'+
+                                    '</label>'+
+                                    '<label class="btn gd-upload-section-label" id="gd-url-button-' + prefix + '">'+
+                                        '<i class="fas fa-link"></i>'+
+                                        'URL'+
+                                    '</label>'+
+                                '</div>'+
+                                 '<div class="gd-browse-document gd-modal-buttons" id="gd-open-document-' + prefix + '">'+
+                                    '<i class="fas fa-folder-open"></i>BROWSE files'+
+                                '</div>'+
+                            '</div>'+
             '<div class="inner-addon left-addon btn gd-url-wrap" id="gd-url-wrap-' + prefix + '" style="display: none;">'+
                 '<input type="url" class="form-control" id="gd-url-' + prefix + '" placeholder="Enter your file URL">'+
                 '<button class="btn gd-url-cancel" id="gd-url-cancel-' + prefix + '"><i class="fas fa-trash"></i></button>'+
@@ -1807,23 +1809,23 @@ function uploadDocument(file, index, url = ''){
 
         function getHtmlModalDialog(){
             return 	'<div class="gd-modal fade" id="modalDialog">'+
-                '<div class="gd-modal-dialog">'+
-                '<div class="gd-modal-content" id="gd-modal-content">'+
-                // header
-                '<div class="gd-modal-header">'+
-                '<div class="gd-modal-close gd-modal-close-action"><span>x</span></div>'+
-                '<h4 class="gd-modal-title"></h4>'+
-                '</div>'+
-                // body
-                '<div class="gd-modal-body">'+
-                // modal content will be here
-                '</div>'+
-                // footer
-                '<div class="gd-modal-footer">'+
-                // empty footer
-                '</div>'+
-                '</div><!-- /.modal-content -->'+
-                '</div><!-- /.modal-dialog -->'+
+                        '<div class="gd-modal-dialog">'+
+                            '<div class="gd-modal-content" id="gd-modal-content">'+
+                                // header
+                                '<div class="gd-modal-header">'+
+                                    '<div class="gd-modal-close gd-modal-close-action"><span>x</span></div>'+
+                                    '<h4 class="gd-modal-title"></h4>'+
+                                '</div>'+
+                                // body
+                                '<div class="gd-modal-body">'+
+                                    // modal content will be here
+                                '</div>'+
+                                // footer
+                                '<div class="gd-modal-footer">'+
+                                // empty footer
+                                '</div>'+
+                            '</div><!-- /.modal-content -->'+
+                        '</div><!-- /.modal-dialog -->'+
                 '</div>';
         }
 

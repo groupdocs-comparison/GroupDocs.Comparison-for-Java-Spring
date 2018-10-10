@@ -189,25 +189,14 @@
     text-align: center;
     width: unset;
 }
-.swiper-wrapper {
-    height: 110px !important;
-    width: 207px;
-}
 .gd-password-wrap {
     position: absolute;
     margin-top: 60px;
     z-index: 1;
 }
-.gd-upload-complete {
-    top: Calc(100% - 102px);
-}
 .gd-upload-complete-fail {
-    font-size: 10px;
-    text-transform: uppercase;
-    text-align: center;
-    position: fixed;
-    left: calc(100% - 139px);
-    top: Calc(100% - 102px);
+    right: 55px;
+    top: 3px;
     display: none;
     color: #FF0000;
 }
