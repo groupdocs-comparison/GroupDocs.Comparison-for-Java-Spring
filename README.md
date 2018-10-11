@@ -1,6 +1,6 @@
 # GroupDocs.Comparison-for-Java-Spring Example
 New GroupDocs.Comparison for Java Spring UI Example
-###### version 1.3.0
+###### version 1.4.0
 
 
 ## System Requirements
