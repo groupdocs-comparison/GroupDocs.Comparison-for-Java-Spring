@@ -1,0 +1,27 @@
+{
+  "name": "groupdocs.comparison-for-java-spring",
+  "version": "1.0.0",
+  "description": "New GroupDocs.Comparison for Java Spring UI Example ###### version 1.4.0",
+  "main": "gulpfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/groupdocs-comparison/GroupDocs.Comparison-for-Java-Spring.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/groupdocs-comparison/GroupDocs.Comparison-for-Java-Spring/issues"
+  },
+  "homepage": "https://github.com/groupdocs-comparison/GroupDocs.Comparison-for-Java-Spring#readme",
+  "dependencies": {
+    "@groupdocs.examples.jquery/common": "^0.4.16",
+    "@groupdocs.examples.jquery/comparison": "^0.4.17",
+    "@groupdocs.examples.jquery/viewer": "^0.4.15"
+  },
+  "devDependencies": {
+    "gulp": "^4.0.0"
+  }
+}
