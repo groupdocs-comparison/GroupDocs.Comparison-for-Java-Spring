@@ -21,6 +21,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Nullable;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
@@ -102,8 +103,8 @@ public class ComparisonController {
     @RequestMapping(method = RequestMethod.POST, value = "/uploadDocument",
             consumes = MULTIPART_FORM_DATA_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
-    public UploadedDocumentEntity uploadDocument(@RequestParam("file") MultipartFile content,
-                                                 @RequestParam("url") String url,
+    public UploadedDocumentEntity uploadDocument(@Nullable @RequestParam("file") MultipartFile content,
+                                                 @RequestParam(value = "url", required = false) String url,
                                                  @RequestParam("rewrite") Boolean rewrite) {
         // get documents storage path
         String documentStoragePath = comparisonService.getComparisonConfiguration().getFilesDirectory();
