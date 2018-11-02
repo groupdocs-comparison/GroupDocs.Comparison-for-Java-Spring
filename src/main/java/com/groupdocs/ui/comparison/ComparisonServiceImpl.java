@@ -61,8 +61,9 @@ public class ComparisonServiceImpl implements ComparisonService {
     public void init() {
         // check files directories
         if (StringUtils.isEmpty(comparisonConfiguration.getFilesDirectory())) {
-            logger.error("Files directory must be specified!");
-            throw new IllegalStateException("Files directory must be specified!");
+            String filesDirectory = Paths.get("").toAbsolutePath().toString();
+            logger.debug("Files directory wasn't set. Use current directory {}.", filesDirectory);
+            comparisonConfiguration.setFilesDirectory(filesDirectory);
         } else {
             new File(comparisonConfiguration.getFilesDirectory()).mkdirs();
             if (!StringUtils.isEmpty(comparisonConfiguration.getResultDirectory())) {
