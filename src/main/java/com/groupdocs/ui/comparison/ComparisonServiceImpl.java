@@ -7,7 +7,6 @@ import com.groupdocs.comparison.common.changes.ChangeInfo;
 import com.groupdocs.comparison.common.compareresult.ICompareResult;
 import com.groupdocs.comparison.common.comparisonsettings.ComparisonSettings;
 import com.groupdocs.comparison.common.license.License;
-import com.groupdocs.comparison.internal.c.a.m.System.e.q;
 import com.groupdocs.ui.comparison.model.request.CompareRequest;
 import com.groupdocs.ui.comparison.model.request.LoadResultPageRequest;
 import com.groupdocs.ui.comparison.model.response.CompareResultResponse;
@@ -282,10 +281,10 @@ public class ComparisonServiceImpl implements ComparisonService {
             ComparisonSettings settings = new ComparisonSettings();
 
             // transform lists of files and passwords
-            List<q> newFiles = new ArrayList<>();
+            List<InputStream> newFiles = new ArrayList<>();
             List<String> newPasswords = new ArrayList<>();
             for (int i = 1; i < files.size(); i++) {
-                newFiles.add(com.groupdocs.comparison.internal.c.a.m.System.e.q.E(files.get(i)));
+                newFiles.add(files.get(i));
                 newPasswords.add(passwords.get(i));
             }
 
