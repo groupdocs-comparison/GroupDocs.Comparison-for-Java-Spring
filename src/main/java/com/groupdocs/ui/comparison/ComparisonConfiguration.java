@@ -3,6 +3,12 @@ package com.groupdocs.ui.comparison;
 import com.groupdocs.ui.config.CommonConfiguration;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
+
+import javax.annotation.PostConstruct;
+
+import static com.groupdocs.ui.config.DefaultDirectories.defaultComparisonDirectory;
+import static com.groupdocs.ui.config.DefaultDirectories.relativePathToAbsolute;
 
 @Component
 public class ComparisonConfiguration extends CommonConfiguration {
@@ -18,6 +24,11 @@ public class ComparisonConfiguration extends CommonConfiguration {
 
     @Value("${comparison.multiComparing}")
     private Boolean multiComparing;
+
+    @PostConstruct
+    public void init() {
+        this.filesDirectory = StringUtils.isEmpty(this.filesDirectory) ? defaultComparisonDirectory() : relativePathToAbsolute(this.filesDirectory);
+    }
 
     public String getFilesDirectory() {
         return filesDirectory;

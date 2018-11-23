@@ -59,16 +59,13 @@ public class ComparisonServiceImpl implements ComparisonService {
     @PostConstruct
     public void init() {
         // check files directories
-        if (StringUtils.isEmpty(comparisonConfiguration.getFilesDirectory())) {
-            String filesDirectory = Paths.get("").toAbsolutePath().toString();
-            logger.debug("Files directory wasn't set. Use current directory {}.", filesDirectory);
-            comparisonConfiguration.setFilesDirectory(filesDirectory);
-        } else {
-            new File(comparisonConfiguration.getFilesDirectory()).mkdirs();
-            if (!StringUtils.isEmpty(comparisonConfiguration.getResultDirectory())) {
-                new File(comparisonConfiguration.getResultDirectory()).mkdirs();
-            }
+        String filesDirectory = comparisonConfiguration.getFilesDirectory();
+        String resultDirectory = comparisonConfiguration.getResultDirectory();
+        if (StringUtils.isEmpty(resultDirectory)) {
+            resultDirectory = filesDirectory + File.separator + "Temp";
+            comparisonConfiguration.setResultDirectory(resultDirectory);
         }
+        new File(resultDirectory).mkdirs();
         // set GroupDocs license
         try {
             License license = new License();
