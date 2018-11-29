@@ -2,6 +2,8 @@
 New GroupDocs.Comparison for Java Spring UI Example
 ###### version 1.8.0
 
+[![Build Status](https://travis-ci.org/groupdocs-comparison/GroupDocs.Comparison-for-Java-Spring.svg?branch=master)](https://travis-ci.org/groupdocs-comparison/GroupDocs.Comparison-for-Java-Spring)
+[![Maintainability](https://api.codeclimate.com/v1/badges/f945b8bc09a5ff2e8a2d/maintainability)](https://codeclimate.com/github/groupdocs-comparison/GroupDocs.Comparison-for-Java-Spring/maintainability)
 
 ## System Requirements
 - Java 8 (JDK 1.8)

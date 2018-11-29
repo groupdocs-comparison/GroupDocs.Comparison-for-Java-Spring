@@ -52,6 +52,7 @@ public class ComparisonController {
      * @return template name
      */
     @RequestMapping(method = RequestMethod.GET)
+    @ResponseBody
     public String getView(Map<String, Object> model) {
         model.put("globalConfiguration", globalConfiguration);
         logger.debug("comparison config: {}", comparisonService.getComparisonConfiguration());
