@@ -3,7 +3,7 @@ package com.groupdocs.ui.config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-
+import org.springframework.beans.factory.annotation.Value;
 import javax.annotation.PostConstruct;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -13,17 +13,8 @@ public class ServerConfiguration {
     private static final Logger logger = LoggerFactory.getLogger(ServerConfiguration.class);
 
     private int httpPort;
+    @Value("${server.hostAddress}")
     private String hostAddress;
-
-    @PostConstruct
-    public void init() {
-        try {
-            hostAddress = InetAddress.getLocalHost().getHostAddress();
-        } catch (UnknownHostException e) {
-            logger.error("Can not get host address ", e);
-            hostAddress = "localhost";
-        }
-    }
 
     public int getHttpPort() {
         return httpPort;
@@ -35,6 +26,10 @@ public class ServerConfiguration {
 
     public String getHostAddress() {
         return hostAddress;
+    }
+
+    public void setHostAddress(String hostAddress) {
+        this.hostAddress = hostAddress;
     }
 
     @Override
