@@ -42,12 +42,12 @@ Coming soon
 - Cross-platform support (Windows, Linux, MacOS)
 
 
-# How to run
+## How to run
 
-For all methods below you can adjust settings in `configuration.yml`. By default in this sample will lookup for license file in `./Licenses` folder, so you can simply put your license file in that folder or specify relative/absolute path by setting `licensePath` value in `configuration.yml`. 
+You can run this sample by one of following methods
 
 
-## Build from source
+#### Build from source
 
 Download [source code](https://github.com/groupdocs-comparison/GroupDocs.Comparison-for-Java-Spring/archive/master.zip) from github or clone this repository.
 
@@ -58,7 +58,7 @@ mvn clean spring-boot:run
 ## Open http://localhost:8080/comparison/ in your favorite browser.
 ```
 
-## Binary release (with all dependencies)
+#### Binary release (with all dependencies)
 
 Download [latest release](https://github.com/groupdocs-comparison/GroupDocs.Comparison-for-Java-Spring/releases/latest) from [releases page](https://github.com/groupdocs-comparison/GroupDocs.Comparison-for-Java-Spring/releases). 
 
@@ -72,7 +72,7 @@ java -jar comparison-spring-1.9.0.jar configuration.yaml
 ## Open http://localhost:8080/comparison/ in your favorite browser.
 ```
 
-## Docker image
+#### Docker image
 Use [docker](https://www.docker.com/) image.
 
 ```bash
@@ -81,8 +81,9 @@ mkdir Licenses
 docker run -p 8080:8080 -v `pwd`/DocumentSamples:/home/groupdocs/app/DocumentSamples -v `pwd`/Licenses:/home/groupdocs/app/Licenses groupdocs/comparison-for-java-spring
 ## Open http://localhost:8080/comparison/ in your favorite browser.
 ```
-PORT - port number specified in `configuration.yml` (by default http://localhost:8080/comparison).
 
+#### Configuration
+For all methods above you can adjust settings in `configuration.yml`. By default in this sample will lookup for license file in `./Licenses` folder, so you can simply put your license file in that folder or specify relative/absolute path by setting `licensePath` value in `configuration.yml`. 
 
 ## Resources
 - **Website:** [www.groupdocs.com](http://www.groupdocs.com)
