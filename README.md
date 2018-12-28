@@ -43,15 +43,47 @@ Coming soon
 
 
 ## How to run
-1. Download/Clone GroupDocs.Comparison for Java Spring Sample.
-2. Extract/Copy GroupDocs.Comparison for Java Spring Sample to working directory.
-3. Navigate to GroupDocs.Comparison for Java Spring Sample root directory.
-4. Update parameters in `configuration.yml` to meet your requirements.
-5. Open console and type `cd 'GroupDocs.Comparison for Java Spring Sample root directory'`, press enter.
-6. From console type following command: `mvn clean spring-boot:run`, press enter.
-7. Go to `http://localhost:{PORT}/comparison`.
-PORT - port number specified in `configuration.yml` (by default http://localhost:8080/comparison).
 
+You can run this sample by one of following methods
+
+
+#### Build from source
+
+Download [source code](https://github.com/groupdocs-comparison/GroupDocs.Comparison-for-Java-Spring/archive/master.zip) from github or clone this repository.
+
+```bash
+git clone https://github.com/groupdocs-comparison/GroupDocs.Comparison-for-Java-Spring
+cd GroupDocs.Comparison-for-Java-Spring
+mvn clean spring-boot:run
+## Open http://localhost:8080/comparison/ in your favorite browser.
+```
+
+#### Binary release (with all dependencies)
+
+Download [latest release](https://github.com/groupdocs-comparison/GroupDocs.Comparison-for-Java-Spring/releases/latest) from [releases page](https://github.com/groupdocs-comparison/GroupDocs.Comparison-for-Java-Spring/releases). 
+
+**Note**: This method is **recommended** for running this sample behind firewall.
+
+```bash
+curl -J -L -o release.tar.gz https://github.com/groupdocs-comparison/GroupDocs.Comparison-for-Java-Spring/releases/download/1.9.0/release.tar.gz
+tar -xvzf release.tar.gz
+cd release
+java -jar comparison-spring-1.9.0.jar configuration.yaml
+## Open http://localhost:8080/comparison/ in your favorite browser.
+```
+
+#### Docker image
+Use [docker](https://www.docker.com/) image.
+
+```bash
+mkdir DocumentSamples
+mkdir Licenses
+docker run -p 8080:8080 -v `pwd`/DocumentSamples:/home/groupdocs/app/DocumentSamples -v `pwd`/Licenses:/home/groupdocs/app/Licenses groupdocs/comparison-for-java-spring
+## Open http://localhost:8080/comparison/ in your favorite browser.
+```
+
+#### Configuration
+For all methods above you can adjust settings in `configuration.yml`. By default in this sample will lookup for license file in `./Licenses` folder, so you can simply put your license file in that folder or specify relative/absolute path by setting `licensePath` value in `configuration.yml`. 
 
 ## Resources
 - **Website:** [www.groupdocs.com](http://www.groupdocs.com)
