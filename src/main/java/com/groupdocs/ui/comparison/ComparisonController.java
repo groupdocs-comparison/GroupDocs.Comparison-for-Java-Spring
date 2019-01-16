@@ -9,7 +9,7 @@ import com.groupdocs.ui.config.GlobalConfiguration;
 import com.groupdocs.ui.exception.TotalGroupDocsException;
 import com.groupdocs.ui.model.request.FileTreeRequest;
 import com.groupdocs.ui.model.response.FileDescriptionEntity;
-import com.groupdocs.ui.model.response.LoadedPageEntity;
+import com.groupdocs.ui.model.response.PageDescriptionEntity;
 import com.groupdocs.ui.model.response.UploadedDocumentEntity;
 import com.groupdocs.ui.util.Utils;
 import org.apache.commons.io.FilenameUtils;
@@ -211,7 +211,7 @@ public class ComparisonController {
      */
     @RequestMapping(method = RequestMethod.POST, value = "/loadResultPage", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
-    public LoadedPageEntity loadResultPage(@RequestBody LoadResultPageRequest loadResultPageRequest){
+    public PageDescriptionEntity loadResultPage(@RequestBody LoadResultPageRequest loadResultPageRequest){
         return comparisonService.loadResultPage(loadResultPageRequest);
     }
 
