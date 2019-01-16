@@ -14,7 +14,7 @@ import com.groupdocs.ui.config.GlobalConfiguration;
 import com.groupdocs.ui.exception.TotalGroupDocsException;
 import com.groupdocs.ui.model.request.FileTreeRequest;
 import com.groupdocs.ui.model.response.FileDescriptionEntity;
-import com.groupdocs.ui.model.response.LoadedPageEntity;
+import com.groupdocs.ui.model.response.PageDescriptionEntity;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -161,18 +161,8 @@ public class ComparisonServiceImpl implements ComparisonService {
                     settings);
         }
 
-        if (compareResult == null) {
-            throw new TotalGroupDocsException("Something went wrong. We've got null result.");
-        }
-
-        // convert results
-        CompareResultResponse compareResultResponse = getCompareResultResponse(compareResult);
-
-        //save all results in file
         String extension = FilenameUtils.getExtension(firstPath);
-        saveFile(compareResultResponse.getGuid(), null, compareResult.getStream(), extension);
-
-        compareResultResponse.setExtension(extension);
+        CompareResultResponse compareResultResponse = getCompareResultResponse(extension, compareResult);
 
         return compareResultResponse;
     }
@@ -200,18 +190,23 @@ public class ComparisonServiceImpl implements ComparisonService {
                     settings);
         }
 
+        CompareResultResponse compareResultResponse = getCompareResultResponse(fileExt, compareResult);
+
+        return compareResultResponse;
+    }
+
+    protected CompareResultResponse getCompareResultResponse(String fileExt, ICompareResult compareResult) {
         if (compareResult == null) {
             throw new TotalGroupDocsException("Something went wrong. We've got null result.");
         }
 
         // convert results
-        CompareResultResponse compareResultResponse = getCompareResultResponse(compareResult);
+        CompareResultResponse compareResultResponse = createCompareResultResponse(compareResult);
 
         //save all results in file
         saveFile(compareResultResponse.getGuid(), null, compareResult.getStream(), fileExt);
 
         compareResultResponse.setExtension(fileExt);
-
         return compareResultResponse;
     }
 
@@ -219,8 +214,8 @@ public class ComparisonServiceImpl implements ComparisonService {
      * {@inheritDoc}
      */
     @Override
-    public LoadedPageEntity loadResultPage(LoadResultPageRequest loadResultPageRequest) {
-        LoadedPageEntity loadedPage = new LoadedPageEntity();
+    public PageDescriptionEntity loadResultPage(LoadResultPageRequest loadResultPageRequest) {
+        PageDescriptionEntity loadedPage = new PageDescriptionEntity();
 
         // load file with results
         try (InputStream inputStream = new BufferedInputStream(new FileInputStream(loadResultPageRequest.getPath()))) {
@@ -228,7 +223,7 @@ public class ComparisonServiceImpl implements ComparisonService {
             byte[] bytes = IOUtils.toByteArray(inputStream);
             // encode ByteArray into String
             String encodedImage = Base64.getEncoder().encodeToString(bytes);
-            loadedPage.setPageImage(encodedImage);
+            loadedPage.setData(encodedImage);
 
         } catch (Exception ex) {
             logger.error("Exception occurred while loading result page", ex);
@@ -290,17 +285,7 @@ public class ComparisonServiceImpl implements ComparisonService {
                     settings);
         }
 
-        if (compareResult == null) {
-            throw new TotalGroupDocsException("Something went wrong. We've got null result.");
-        }
-
-        // convert results
-        CompareResultResponse compareResultResponse = getCompareResultResponse(compareResult);
-
-        //save all results in file
-        saveFile(compareResultResponse.getGuid(), null, compareResult.getStream(), ext);
-
-        compareResultResponse.setExtension(ext);
+        CompareResultResponse compareResultResponse = getCompareResultResponse(ext, compareResult);
 
         return compareResultResponse;
     }
@@ -361,7 +346,7 @@ public class ComparisonServiceImpl implements ComparisonService {
      * @param compareResult results
      * @return results response
      */
-    private CompareResultResponse getCompareResultResponse(ICompareResult compareResult) {
+    private CompareResultResponse createCompareResultResponse(ICompareResult compareResult) {
         CompareResultResponse compareResultResponse = new CompareResultResponse();
 
         // list of changes

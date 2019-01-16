@@ -5,7 +5,7 @@ import com.groupdocs.ui.comparison.model.request.LoadResultPageRequest;
 import com.groupdocs.ui.comparison.model.response.CompareResultResponse;
 import com.groupdocs.ui.model.request.FileTreeRequest;
 import com.groupdocs.ui.model.response.FileDescriptionEntity;
-import com.groupdocs.ui.model.response.LoadedPageEntity;
+import com.groupdocs.ui.model.response.PageDescriptionEntity;
 
 import java.io.InputStream;
 import java.util.List;
@@ -55,7 +55,7 @@ public interface ComparisonService {
      * @param loadResultPageRequest request with path to page result
      * @return page result data
      */
-    LoadedPageEntity loadResultPage(LoadResultPageRequest loadResultPageRequest);
+    PageDescriptionEntity loadResultPage(LoadResultPageRequest loadResultPageRequest);
 
     /**
      * Produce file names for results
