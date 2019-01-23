@@ -15,8 +15,6 @@ import com.groupdocs.ui.exception.TotalGroupDocsException;
 import com.groupdocs.ui.model.request.FileTreeRequest;
 import com.groupdocs.ui.model.response.FileDescriptionEntity;
 import com.groupdocs.ui.model.response.PageDescriptionEntity;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +28,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.*;
 
-import static com.groupdocs.ui.util.Utils.FILE_NAME_COMPARATOR;
-import static com.groupdocs.ui.util.Utils.FILE_TYPE_COMPARATOR;
+import static com.groupdocs.ui.util.Utils.*;
 
 @Service
 public class ComparisonServiceImpl implements ComparisonService {
@@ -164,7 +161,7 @@ public class ComparisonServiceImpl implements ComparisonService {
                     settings);
         }
 
-        String extension = FilenameUtils.getExtension(firstPath);
+        String extension = parseFileExtension(firstPath);
         CompareResultResponse compareResultResponse = getCompareResultResponse(extension, compareResult);
 
         return compareResultResponse;
@@ -224,10 +221,7 @@ public class ComparisonServiceImpl implements ComparisonService {
         // load file with results
         try (InputStream inputStream = new BufferedInputStream(new FileInputStream(loadResultPageRequest.getPath()))) {
 
-            byte[] bytes = IOUtils.toByteArray(inputStream);
-            // encode ByteArray into String
-            String encodedImage = Base64.getEncoder().encodeToString(bytes);
-            loadedPage.setData(encodedImage);
+            loadedPage.setData(getStringFromStream(inputStream));
 
         } catch (Exception ex) {
             logger.error("Exception occurred while loading result page", ex);
@@ -256,9 +250,9 @@ public class ComparisonServiceImpl implements ComparisonService {
      */
     @Override
     public boolean checkFiles(String firstFile, String secondFile) {
-        String extension = FilenameUtils.getExtension(firstFile);
+        String extension = parseFileExtension(firstFile);
         // check if files extensions are the same and support format file
-        return extension.equals(FilenameUtils.getExtension(secondFile)) && checkSupportedFiles(extension.toLowerCase());
+        return extension.equals(parseFileExtension(secondFile)) && checkSupportedFiles(extension.toLowerCase());
     }
 
     /**
@@ -299,13 +293,13 @@ public class ComparisonServiceImpl implements ComparisonService {
      */
     @Override
     public boolean checkMultiFiles(List<String> fileNames) {
-        String extension = FilenameUtils.getExtension(fileNames.get(0));
+        String extension = parseFileExtension(fileNames.get(0));
         // check if files extensions are the same and support format file
         if (! checkSupportedFiles(extension)) {
             return false;
         }
         for (String path : fileNames) {
-            if (! extension.equals(FilenameUtils.getExtension(path))) {
+            if (! extension.equals(parseFileExtension(path))) {
                 return false;
             }
         }
