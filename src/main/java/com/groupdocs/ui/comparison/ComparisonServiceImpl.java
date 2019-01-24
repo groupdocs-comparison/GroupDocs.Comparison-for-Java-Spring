@@ -47,6 +47,9 @@ public class ComparisonServiceImpl implements ComparisonService {
     public static final String PPTX = "pptx";
     public static final String PDF = "pdf";
     public static final String TXT = "txt";
+    public static final String HTM = "htm";
+    public static final String HTML = "html";
+    public static final String TEMP_HTML = "temp.html";
 
     @Autowired
     private ComparisonConfiguration comparisonConfiguration;
@@ -201,7 +204,8 @@ public class ComparisonServiceImpl implements ComparisonService {
         }
 
         // convert results
-        CompareResultResponse compareResultResponse = createCompareResultResponse(compareResult);
+        boolean isHtml = HTML.equals(fileExt) || HTM.equals(fileExt);
+        CompareResultResponse compareResultResponse = createCompareResultResponse(compareResult, isHtml);
 
         //save all results in file
         saveFile(compareResultResponse.getGuid(), null, compareResult.getStream(), fileExt);
@@ -239,7 +243,7 @@ public class ComparisonServiceImpl implements ComparisonService {
     @Override
     public String calculateResultFileName(String documentGuid, Integer index, String ext) {
         // configure file name for results
-        String resultDirectory = StringUtils.isEmpty(comparisonConfiguration.getResultDirectory()) ? comparisonConfiguration.getFilesDirectory() : comparisonConfiguration.getResultDirectory();
+        String resultDirectory = getResultDirectory();
         String extension = ext != null ? getRightExt(ext.toLowerCase()) : "";
         // for images of pages specify index, for all result pages file specify "all" prefix
         String idx = index == null ? "all." : index.toString() + ".";
@@ -334,6 +338,8 @@ public class ComparisonServiceImpl implements ComparisonService {
             case PPTX:
             case PDF:
             case TXT:
+            case HTML:
+            case HTM:
                 return true;
             default:
                 return false;
@@ -344,9 +350,10 @@ public class ComparisonServiceImpl implements ComparisonService {
      * Convert results of comparing and save result files
      *
      * @param compareResult results
+     * @param isHtml
      * @return results response
      */
-    private CompareResultResponse createCompareResultResponse(ICompareResult compareResult) {
+    private CompareResultResponse createCompareResultResponse(ICompareResult compareResult, boolean isHtml) {
         CompareResultResponse compareResultResponse = new CompareResultResponse();
 
         // list of changes
@@ -355,6 +362,11 @@ public class ComparisonServiceImpl implements ComparisonService {
 
         String guid = UUID.randomUUID().toString();
         compareResultResponse.setGuid(guid);
+
+        if (isHtml) {
+            String resultDirectory = getResultDirectory();
+            compareResult.saveDocument(resultDirectory + File.separator + TEMP_HTML);
+        }
 
         // if there are changes save images of all pages
         // unless save only the last page with summary
@@ -369,6 +381,10 @@ public class ComparisonServiceImpl implements ComparisonService {
             compareResultResponse.setPages(Collections.singletonList(saveFile(guid, last, images.get(last), JPG)));
         }
         return compareResultResponse;
+    }
+
+    private String getResultDirectory() {
+        return StringUtils.isEmpty(comparisonConfiguration.getResultDirectory()) ? comparisonConfiguration.getFilesDirectory() : comparisonConfiguration.getResultDirectory();
     }
 
     /**
