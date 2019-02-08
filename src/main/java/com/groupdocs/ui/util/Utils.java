@@ -1,7 +1,9 @@
 package com.groupdocs.ui.util;
 
+import com.groupdocs.ui.config.ServerConfiguration;
 import com.groupdocs.ui.exception.TotalGroupDocsException;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -9,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
@@ -17,6 +20,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.Base64;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -24,11 +28,46 @@ import java.util.Map;
 import static org.springframework.http.HttpHeaders.CONTENT_LENGTH;
 
 public class Utils {
-
     private static final Logger logger = LoggerFactory.getLogger(Utils.class);
 
     public static final FileNameComparator FILE_NAME_COMPARATOR = new FileNameComparator();
     public static final FileTypeComparator FILE_TYPE_COMPARATOR = new FileTypeComparator();
+
+    /**
+     * Set local port from request to config
+     *
+     * @param request
+     * @param server
+     */
+    public static void setLocalPort(HttpServletRequest request, ServerConfiguration server) {
+        if (server.getHttpPort() == null) {
+            server.setHttpPort(request.getLocalPort());
+        }
+    }
+
+    /**
+     * Read stream and convert to string
+     *
+     * @param inputStream
+     * @return
+     * @throws IOException
+     */
+    public static String getStringFromStream(InputStream inputStream) throws IOException {
+        byte[] bytes = IOUtils.toByteArray(inputStream);
+        // encode ByteArray into String
+        return Base64.getEncoder().encodeToString(bytes);
+    }
+
+    /**
+     * Parse extension of the file's name
+     *
+     * @param documentGuid path to file
+     * @return extension of the file's name
+     */
+    public static String parseFileExtension(String documentGuid) {
+        String extension = FilenameUtils.getExtension(documentGuid);
+        return extension == null ? null : extension.toLowerCase();
+    }
 
     /**
      * Fill header HTTP response with file data

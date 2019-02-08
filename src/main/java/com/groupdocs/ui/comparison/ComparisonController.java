@@ -12,7 +12,6 @@ import com.groupdocs.ui.model.response.FileDescriptionEntity;
 import com.groupdocs.ui.model.response.PageDescriptionEntity;
 import com.groupdocs.ui.model.response.UploadedDocumentEntity;
 import com.groupdocs.ui.util.Utils;
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Nullable;
 import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URI;
@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static com.groupdocs.ui.util.Utils.uploadFile;
+import static com.groupdocs.ui.util.Utils.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 
@@ -52,7 +52,9 @@ public class ComparisonController {
      * @return template name
      */
     @RequestMapping(method = RequestMethod.GET)
-    public String getView(Map<String, Object> model) {
+    public String getView(HttpServletRequest request, Map<String, Object> model){
+        setLocalPort(request, globalConfiguration.getServer());
+
         model.put("globalConfiguration", globalConfiguration);
         logger.debug("comparison config: {}", comparisonService.getComparisonConfiguration());
         model.put("comparisonConfiguration", comparisonService.getComparisonConfiguration());
@@ -159,7 +161,7 @@ public class ComparisonController {
                 InputStream firstInputStream = firstContent.getInputStream();
                 InputStream secondInputStream = secondContent.getInputStream();
                 // compare files
-                return comparisonService.compareFiles(firstInputStream, firstPassword, secondInputStream, secondPassword, FilenameUtils.getExtension(firstFileName));
+                return comparisonService.compareFiles(firstInputStream, firstPassword, secondInputStream, secondPassword, parseFileExtension(firstFileName));
             } else {
                 logger.error("Document types are different");
                 throw new TotalGroupDocsException("Document types are different");
@@ -193,7 +195,7 @@ public class ComparisonController {
                 try (InputStream firstContent = fUrl.openStream();
                      InputStream secondContent = sUrl.openStream()) {
                     // compare
-                    return comparisonService.compareFiles(firstContent, firstPassword, secondContent, secondPassword, FilenameUtils.getExtension(firstPath));
+                    return comparisonService.compareFiles(firstContent, firstPassword, secondContent, secondPassword, parseFileExtension(firstPath));
                 }
             } else {
                 logger.error("Document types are different");
@@ -245,7 +247,7 @@ public class ComparisonController {
             // check formats
             if (comparisonService.checkMultiFiles(fileNames)) {
                 // get file extension
-                String ext = FilenameUtils.getExtension(fileNames.get(0));
+                String ext = parseFileExtension(fileNames.get(0));
 
                 // compare
                 List<InputStream> newFiles = transformFiles.getNewFiles();
@@ -291,7 +293,7 @@ public class ComparisonController {
             // check formats
             if (comparisonService.checkMultiFiles(fileNames)) {
                 // get file extension
-                String ext = FilenameUtils.getExtension(fileNames.get(0));
+                String ext = parseFileExtension(fileNames.get(0));
 
                 // compare
                 return comparisonService.multiCompareFiles(transformFiles.getNewFiles(), transformFiles.getNewPasswords(), ext);
