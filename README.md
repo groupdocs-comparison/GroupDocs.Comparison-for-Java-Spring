@@ -1,6 +1,6 @@
 # GroupDocs.Comparison-for-Java-Spring Example
 New GroupDocs.Comparison for Java Spring UI Example
-###### version 1.9.6
+###### version 1.9.7
 
 [![Build Status](https://travis-ci.org/groupdocs-comparison/GroupDocs.Comparison-for-Java-Spring.svg?branch=master)](https://travis-ci.org/groupdocs-comparison/GroupDocs.Comparison-for-Java-Spring)
 [![Maintainability](https://api.codeclimate.com/v1/badges/f945b8bc09a5ff2e8a2d/maintainability)](https://codeclimate.com/github/groupdocs-comparison/GroupDocs.Comparison-for-Java-Spring/maintainability)
@@ -76,10 +76,10 @@ Download [latest release](https://github.com/groupdocs-comparison/GroupDocs.Comp
 **Note**: This method is **recommended** for running this sample behind firewall.
 
 ```bash
-curl -J -L -o release.tar.gz https://github.com/groupdocs-comparison/GroupDocs.Comparison-for-Java-Spring/releases/download/1.9.6/release.tar.gz
+curl -J -L -o release.tar.gz https://github.com/groupdocs-comparison/GroupDocs.Comparison-for-Java-Spring/releases/download/1.9.7/release.tar.gz
 tar -xvzf release.tar.gz
 cd release
-java -jar comparison-spring-1.9.6.jar configuration.yaml
+java -jar comparison-spring-1.9.7.jar configuration.yaml
 ## Open http://localhost:8080/comparison/ in your favorite browser.
 ```
 
