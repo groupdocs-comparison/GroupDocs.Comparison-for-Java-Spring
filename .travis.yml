@@ -5,8 +5,8 @@ jdk:
 - oraclejdk9
 - openjdk8
 #- oraclejdk11
-- openjdk10
-- openjdk11
+#- openjdk10
+#- openjdk11
 services:
   - docker
 jobs:
