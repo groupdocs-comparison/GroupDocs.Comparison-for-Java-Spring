@@ -13,10 +13,9 @@ New GroupDocs.Comparison for Java Spring UI Example
 
 ## Compare documents with Java API
 
-**GroupDocs.Comparison for Java** is a library that allows you to **compare PDF, DOCX, PPT, XLS**, and over 90 other document formats. With GroupDocs.Comparison for Java you will be able to compare two or more files perform style and text comparison and generate a detailed report with changes in documents.
+**GroupDocs.Comparison for Java** is a library that allows you to **compare PDF, DOCX, PPT, XLS,** and over 90 other document formats. With GroupDocs.Comparison for Java you will be able to compare two or more files, perform style and text comparison and generate a detailed report with changes.
 
 This application allows you to compare multiple documents and can be used as a standalone application or integrated as part of your project.
-
 
 **Note:** without a license application will run in trial mode, purchase [GroupDocs.Comparison for Java license](https://purchase.groupdocs.com/order-online-step-1-of-8.aspx) or request [GroupDocs.Comparison for Java temporary license](https://purchase.groupdocs.com/temporary-license).
 
