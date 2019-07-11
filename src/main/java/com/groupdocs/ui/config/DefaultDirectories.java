@@ -5,8 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 import java.io.File;
-import java.nio.file.FileSystems;
-import java.nio.file.Path;
+import java.io.IOException;
+import java.nio.file.*;
 
 public class DefaultDirectories {
     private static final Logger logger = LoggerFactory.getLogger(DefaultDirectories.class);
@@ -36,13 +36,17 @@ public class DefaultDirectories {
     public static String getDefaultFilesDir(String folder) {
         String dir = DOCUMENT_SAMPLES + File.separator + folder;
         Path path = FileSystems.getDefault().getPath(dir).toAbsolutePath();
-        makeDirs(path.toFile());
+        makeDirs(path);
         return path.toString();
     }
 
-    private static void makeDirs(File file) {
-        if (!file.exists()) {
-            file.mkdirs();
+    public static void makeDirs(Path path) {
+        try {
+            Files.createDirectories(path);
+        } catch (FileAlreadyExistsException ex) {
+            // it is ok
+        } catch (IOException e) {
+            logger.error("Exception occurred while creating directories");
         }
     }
 
@@ -55,14 +59,28 @@ public class DefaultDirectories {
 
         for (Path root : rootDirectories) {
             if (path.startsWith(root.toString())) {
-                makeDirs(new File(path));
+                makeDirs(Paths.get(path));
                 return path;
             }
         }
 
         Path absolutePath = FileSystems.getDefault().getPath(path).toAbsolutePath();
-        makeDirs(absolutePath.toFile());
+        makeDirs(absolutePath);
         return absolutePath.toString();
+    }
+
+    public static boolean isAbsolutePath(String path) {
+        if (StringUtils.isEmpty(path)) {
+            return false;
+        }
+
+        Iterable<Path> rootDirectories = FileSystems.getDefault().getRootDirectories();
+        for (Path root : rootDirectories) {
+            if (path.startsWith(root.toString())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static Path getDefaultLicFile(File licFolder) {
