@@ -101,18 +101,12 @@ public class ComparisonServiceImpl implements ComparisonService {
         }
         File directory = new File(currentPath);
         List<FileDescriptionEntity> fileList = new ArrayList<>();
-        List<File> filesList = Arrays.asList(directory.listFiles());
+        List<File> filesList = Ordering.from(FILE_TYPE_COMPARATOR).compound(FILE_NAME_COMPARATOR)
+                .sortedCopy(Arrays.asList(directory.listFiles()));
         try {
-            // sort list of files and folders
-            filesList = Ordering.from(FILE_TYPE_COMPARATOR).compound(FILE_NAME_COMPARATOR).sortedCopy(filesList);
             for (File file : filesList) {
-                // check if current file/folder is hidden
-                if (file.isHidden()) {
-                    // ignore current file and skip to next one
-                    continue;
-                } else {
+                if (!file.isHidden()) {
                     FileDescriptionEntity fileDescription = getFileDescriptionEntity(file);
-                    // add object to array list
                     fileList.add(fileDescription);
                 }
             }
@@ -201,20 +195,9 @@ public class ComparisonServiceImpl implements ComparisonService {
 
         List<ChangeInfo> changeInfoList = new ArrayList<>();
         ChangeInfo[] changes = compareResult.getChanges();
-        for (int i = 0; i < changes.length; i++) {
-            ChangeInfo change = changes[i];
-            if (TypeChanged.Deleted != change.getType()) {
-                changeInfoList.add(change);
-            }
-        }
+        addChanges(changeInfoList, changes);
         ChangeInfo[] reversChanges = compareResultRevers.getChanges();
-        for (int i = 0; i < reversChanges.length; i++) {
-            ChangeInfo reversChange = reversChanges[i];
-            if (TypeChanged.Inserted == reversChange.getType()) {
-                reversChange.setType(TypeChanged.Deleted);
-                changeInfoList.add(reversChange);
-            }
-        }
+        addReversChanges(changeInfoList, reversChanges);
 
         compareResultResponse.setChanges(changeInfoList.toArray(new ChangeInfo[changeInfoList.size()]));
 
@@ -224,6 +207,25 @@ public class ComparisonServiceImpl implements ComparisonService {
         }
 
         return compareResultResponse;
+    }
+
+    private void addChanges(List<ChangeInfo> changeInfoList, ChangeInfo[] changes) {
+        for (int i = 0; i < changes.length; i++) {
+            ChangeInfo change = changes[i];
+            if (TypeChanged.Deleted != change.getType()) {
+                changeInfoList.add(change);
+            }
+        }
+    }
+
+    private void addReversChanges(List<ChangeInfo> changeInfoList, ChangeInfo[] reversChanges) {
+        for (int i = 0; i < reversChanges.length; i++) {
+            ChangeInfo reversChange = reversChanges[i];
+            if (TypeChanged.Inserted == reversChange.getType()) {
+                reversChange.setType(TypeChanged.Deleted);
+                changeInfoList.add(reversChange);
+            }
+        }
     }
 
     /**
