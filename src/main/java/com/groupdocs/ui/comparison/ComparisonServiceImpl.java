@@ -146,7 +146,7 @@ public class ComparisonServiceImpl implements ComparisonService {
         LoadDocumentRequest loadDocumentRequestSecond = guids.get(1);
         String firstPath = loadDocumentRequestFirst.getGuid();
 
-        ICompareResult compareResult, compareResultRevers;
+        ICompareResult compareResult;
 
         //TODO: remove this synchronization when the bug COMPARISONJAVA-436 is fixed
         synchronized (this) {
@@ -316,10 +316,11 @@ public class ComparisonServiceImpl implements ComparisonService {
         settings.setShowDeletedContent(false);
         settings.setStyleChangeDetection(true);
         settings.setCalculateComponentCoordinates(true);
-        ICompareResult compareResult = comparer.compare(loadDocumentRequestSecond.getGuid(),
-                convertEmptyPasswordToNull(loadDocumentRequestSecond.getPassword()),
+        ICompareResult compareResult = comparer.compare(
                 loadDocumentRequestFirst.getGuid(),
                 convertEmptyPasswordToNull(loadDocumentRequestFirst.getPassword()),
+                loadDocumentRequestSecond.getGuid(),
+                convertEmptyPasswordToNull(loadDocumentRequestSecond.getPassword()),
                 settings);
         if (compareResult == null) {
             throw new TotalGroupDocsException("Something went wrong. We've got null result.");
