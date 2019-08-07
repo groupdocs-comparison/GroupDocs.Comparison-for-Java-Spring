@@ -94,12 +94,8 @@ public class ComparisonServiceImpl implements ComparisonService {
      */
     @Override
     public List<FileDescriptionEntity> loadFiles(FileTreeRequest fileTreeRequest) {
-        String currentPath = fileTreeRequest.getPath();
-        if (StringUtils.isEmpty(currentPath)) {
-            currentPath = comparisonConfiguration.getFilesDirectory();
-        } else {
-            currentPath = String.format("%s%s%s", comparisonConfiguration.getFilesDirectory(), File.separator, currentPath);
-        }
+        String currentPath = StringUtils.isEmpty(fileTreeRequest.getPath()) ? comparisonConfiguration.getFilesDirectory() :
+                String.format("%s%s%s", comparisonConfiguration.getFilesDirectory(), File.separator, fileTreeRequest.getPath());
         File directory = new File(currentPath);
         List<FileDescriptionEntity> fileList = new ArrayList<>();
         List<File> filesList = Ordering.from(FILE_TYPE_COMPARATOR).compound(FILE_NAME_COMPARATOR)
@@ -190,15 +186,7 @@ public class ComparisonServiceImpl implements ComparisonService {
         CompareResultResponse compareResultResponse = new CompareResultResponse();
 
         // FIXME: temporary fix
-        ChangeInfo[] changes = compareResult.getChanges();
-        for (int i = 0; i < changes.length; i++) {
-            ChangeInfo change = changes[i];
-            if (DOC.equals(fileExt) || DOCX.equals(fileExt)) {
-                change.getBox().setY(change.getPageInfo().getHeight() - change.getBox().getY());
-            }
-            int id = change.getPageInfo().getId();
-            change.getPageInfo().setId(id > 0 ? id - 1 : id);
-        }
+        ChangeInfo[] changes = getChangeInfos(compareResult, fileExt);
 
         compareResultResponse.setChanges(changes);
 
@@ -209,6 +197,19 @@ public class ComparisonServiceImpl implements ComparisonService {
         }
 
         return compareResultResponse;
+    }
+
+    private ChangeInfo[] getChangeInfos(ICompareResult compareResult, String fileExt) {
+        ChangeInfo[] changes = compareResult.getChanges();
+        for (int i = 0; i < changes.length; i++) {
+            ChangeInfo change = changes[i];
+            if (DOC.equals(fileExt) || DOCX.equals(fileExt)) {
+                change.getBox().setY(change.getPageInfo().getHeight() - change.getBox().getY());
+            }
+            int id = change.getPageInfo().getId();
+            change.getPageInfo().setId(id > 0 ? id - 1 : id);
+        }
+        return changes;
     }
 
     /**
