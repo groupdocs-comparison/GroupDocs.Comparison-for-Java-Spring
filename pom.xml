@@ -151,7 +151,7 @@
         <dependency>
             <groupId>com.groupdocs</groupId>
             <artifactId>groupdocs-comparison</artifactId>
-            <version>18.6.3</version>
+            <version>19.6</version>
             <type>jar</type>
         </dependency>
         <dependency>
@@ -184,6 +184,9 @@
                 <groupId>com.github.eirslett</groupId>
                 <artifactId>frontend-maven-plugin</artifactId>
                 <version>1.6</version>
+                <configuration>
+                    <workingDirectory>client</workingDirectory>
+                </configuration>
                 <executions>
                     <execution>
                         <!-- optional: you don't really need execution ids, but it looks nice in your build log. -->
@@ -214,12 +217,21 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>gulp build</id>
+                        <id>install client</id>
                         <goals>
-                            <goal>gulp</goal>
+                            <goal>npm</goal>
                         </goals>
                         <configuration>
-                            <arguments>build</arguments>
+                            <arguments>install</arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>build client</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>run build</arguments>
                         </configuration>
                     </execution>
                 </executions>
