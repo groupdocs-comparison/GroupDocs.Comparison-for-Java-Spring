@@ -1,3 +1,4 @@
+![GroupDocs.Comparison](https://raw.githubusercontent.com/groupdocs-comparison/groupdocs-comparison.github.io/master/resources/image/banner.png "GroupDocs.Comparison")
 # GroupDocs.Comparison for Java Spring Example
 New GroupDocs.Comparison for Java Spring UI Example
 ###### version 1.9.13
@@ -21,7 +22,12 @@ This application allows you to compare multiple documents and can be used as a s
 
 
 ## Demo Video
-Coming soon
+
+<p align="center">
+  <a title="Document comparison for JAVA " href="https://www.youtube.com/watch?v=82RuvtV2qpw"> 
+    <img src="https://raw.githubusercontent.com/groupdocs-comparison/groupdocs-comparison.github.io/master/resources/image/comparison.gif" width="100%" style="width:100%;">
+  </a>
+</p>
 
 
 ## Features
