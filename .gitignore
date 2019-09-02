@@ -16,6 +16,7 @@ package-lock.json
 Licenses/*
 !Licenses/.gitkeep
 DocumentSamples/*
+!DocumentSamples/.gitkeep
 
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
