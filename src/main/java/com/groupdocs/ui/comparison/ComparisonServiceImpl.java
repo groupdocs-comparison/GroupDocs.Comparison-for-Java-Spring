@@ -6,7 +6,13 @@ import com.groupdocs.comparison.common.PageImage;
 import com.groupdocs.comparison.common.changes.ChangeInfo;
 import com.groupdocs.comparison.common.compareresult.ICompareResult;
 import com.groupdocs.comparison.common.comparisonsettings.ComparisonSettings;
+import com.groupdocs.comparison.common.exceptions.cellexceptions.InvalidCellPasswordException;
+import com.groupdocs.comparison.common.exceptions.noteexceptions.InvalidNotePasswordException;
+import com.groupdocs.comparison.common.exceptions.pdfexceptions.InvalidPdfPasswordException;
+import com.groupdocs.comparison.common.exceptions.slidesexceptions.InvalidSlidesPasswordException;
+import com.groupdocs.comparison.common.exceptions.wordsexceptions.InvalidWordsPasswordException;
 import com.groupdocs.comparison.common.license.License;
+import com.groupdocs.comparison.internal.c.a.s.InvalidPasswordException;
 import com.groupdocs.ui.comparison.model.request.CompareRequest;
 import com.groupdocs.ui.comparison.model.response.CompareResultResponse;
 import com.groupdocs.ui.config.DefaultDirectories;
@@ -217,9 +223,10 @@ public class ComparisonServiceImpl implements ComparisonService {
      */
     @Override
     public PageDescriptionEntity loadResultPage(LoadDocumentPageRequest loadDocumentPageRequest) {
+        String password = loadDocumentPageRequest.getPassword();
         try {
             Comparer comparer = new Comparer();
-            List<PageImage> pageImages = comparer.convertToImages(loadDocumentPageRequest.getGuid(), loadDocumentPageRequest.getPassword());
+            List<PageImage> pageImages = comparer.convertToImages(loadDocumentPageRequest.getGuid(), password);
             try {
                 PageImage pageImage = pageImages.get(loadDocumentPageRequest.getPage() - 1);
                 return getPageDescriptionEntity(pageImage);
@@ -227,8 +234,15 @@ public class ComparisonServiceImpl implements ComparisonService {
                 logger.error("Exception occurred while loading result page", ex);
                 throw new TotalGroupDocsException("Exception occurred while loading result page", ex);
             }
+        } catch (InvalidPasswordException
+                | InvalidWordsPasswordException
+                | InvalidCellPasswordException
+                | InvalidPdfPasswordException
+                | InvalidSlidesPasswordException
+                | InvalidNotePasswordException ex) {
+            throw new TotalGroupDocsException(getExceptionMessage(password), ex);
         } catch (Exception ex) {
-            throw new TotalGroupDocsException(getExceptionMessage(loadDocumentPageRequest.getPassword(), ex), ex);
+            throw new TotalGroupDocsException(ex.getMessage(), ex);
         }
     }
 
@@ -247,14 +261,22 @@ public class ComparisonServiceImpl implements ComparisonService {
 
     @Override
     public LoadDocumentEntity loadDocument(LoadDocumentRequest loadDocumentRequest) {
+        String password = loadDocumentRequest.getPassword();
         try {
             LoadDocumentEntity loadDocumentEntity = new LoadDocumentEntity();
             loadDocumentEntity.setGuid(loadDocumentRequest.getGuid());
-            List<PageDescriptionEntity> pageDescriptionEntities = loadPages(loadDocumentRequest.getGuid(), loadDocumentRequest.getPassword());
+            List<PageDescriptionEntity> pageDescriptionEntities = loadPages(loadDocumentRequest.getGuid(), password);
             loadDocumentEntity.setPages(pageDescriptionEntities);
             return loadDocumentEntity;
+        } catch (InvalidPasswordException
+                | InvalidWordsPasswordException
+                | InvalidCellPasswordException
+                | InvalidPdfPasswordException
+                | InvalidSlidesPasswordException
+                | InvalidNotePasswordException ex) {
+            throw new TotalGroupDocsException(getExceptionMessage(password), ex);
         } catch (Exception ex) {
-            throw new TotalGroupDocsException(getExceptionMessage(loadDocumentRequest.getPassword(), ex), ex);
+            throw new TotalGroupDocsException(ex.getMessage(), ex);
         }
     }
 
