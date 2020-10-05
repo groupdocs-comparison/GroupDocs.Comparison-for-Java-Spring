@@ -14,7 +14,7 @@ public class LoadDocumentRequest {
     }
 
     public String getPassword() {
-        return password;
+        return org.apache.commons.lang3.StringUtils.isNotBlank(password) ? password : null;
     }
 
     public void setPassword(String password) {

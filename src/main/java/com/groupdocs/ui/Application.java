@@ -70,6 +70,7 @@ public class Application extends SpringBootServletInitializer {
 
     /**
      * Configure CORS parameters
+     *
      * @return
      */
     @Bean

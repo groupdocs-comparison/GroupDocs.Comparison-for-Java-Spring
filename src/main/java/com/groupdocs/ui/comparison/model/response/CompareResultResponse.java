@@ -1,6 +1,6 @@
 package com.groupdocs.ui.comparison.model.response;
 
-import com.groupdocs.comparison.common.changes.ChangeInfo;
+import com.groupdocs.comparison.result.ChangeInfo;
 import com.groupdocs.ui.model.response.PageDescriptionEntity;
 
 import java.util.List;
