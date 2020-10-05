@@ -2,6 +2,7 @@ package com.groupdocs.ui.model.request;
 
 public class LoadDocumentPageRequest extends LoadDocumentRequest {
     private Integer page;
+    private boolean loadAllPages;
 
     public Integer getPage() {
         return page;
@@ -9,5 +10,13 @@ public class LoadDocumentPageRequest extends LoadDocumentRequest {
 
     public void setPage(Integer page) {
         this.page = page;
+    }
+
+    public boolean isLoadAllPages() {
+        return loadAllPages;
+    }
+
+    public void setLoadAllPages(boolean loadAllPages) {
+        this.loadAllPages = loadAllPages;
     }
 }

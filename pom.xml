@@ -6,7 +6,7 @@
 
     <groupId>com.groupdocs.ui</groupId>
     <artifactId>comparison-spring</artifactId>
-    <version>1.9.19</version>
+    <version>1.9.20</version>
     <packaging>${packaging.type}</packaging>
 
     <name>GroupDocs.Comparison for Java Spring Sample</name>
@@ -149,9 +149,14 @@
             <version>2.6</version>
         </dependency>
         <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.4</version>
+        </dependency>
+        <dependency>
             <groupId>com.groupdocs</groupId>
             <artifactId>groupdocs-comparison</artifactId>
-            <version>19.6</version>
+            <version>20.4</version>
             <type>jar</type>
         </dependency>
         <dependency>

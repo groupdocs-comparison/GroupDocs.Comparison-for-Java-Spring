@@ -6,7 +6,6 @@ import com.groupdocs.ui.config.GlobalConfiguration;
 import com.groupdocs.ui.exception.TotalGroupDocsException;
 import com.groupdocs.ui.model.request.FileTreeRequest;
 import com.groupdocs.ui.model.request.LoadDocumentPageRequest;
-import com.groupdocs.ui.model.request.LoadDocumentRequest;
 import com.groupdocs.ui.model.response.FileDescriptionEntity;
 import com.groupdocs.ui.model.response.LoadDocumentEntity;
 import com.groupdocs.ui.model.response.PageDescriptionEntity;
@@ -149,8 +148,8 @@ public class ComparisonController {
      */
     @RequestMapping(method = RequestMethod.POST, value = "/loadDocumentDescription", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
-    public LoadDocumentEntity loadDocumentDescription(@RequestBody LoadDocumentRequest loadDocumentRequest) {
-        return comparisonService.loadDocument(loadDocumentRequest);
+    public LoadDocumentEntity loadDocumentDescription(@RequestBody LoadDocumentPageRequest loadDocumentRequest) {
+        return comparisonService.loadDocumentDescription(loadDocumentRequest);
     }
 
     /**
@@ -160,8 +159,8 @@ public class ComparisonController {
      */
     @RequestMapping(method = RequestMethod.POST, value = "/loadDocumentPage", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
-    public PageDescriptionEntity loadResultPage(@RequestBody LoadDocumentPageRequest loadDocumentPageRequest) {
-        return comparisonService.loadResultPage(loadDocumentPageRequest);
+    public PageDescriptionEntity loadDocumentPage(@RequestBody LoadDocumentPageRequest loadDocumentPageRequest) {
+        return comparisonService.loadDocumentPage(loadDocumentPageRequest);
     }
 
 }
