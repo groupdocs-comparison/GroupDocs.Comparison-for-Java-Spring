@@ -156,7 +156,7 @@
         <dependency>
             <groupId>com.groupdocs</groupId>
             <artifactId>groupdocs-comparison</artifactId>
-            <version>20.4</version>
+            <version>21.6</version>
             <type>jar</type>
         </dependency>
         <dependency>

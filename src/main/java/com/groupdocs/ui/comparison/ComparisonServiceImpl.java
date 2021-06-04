@@ -10,8 +10,10 @@ import com.groupdocs.comparison.options.enums.PreviewFormats;
 import com.groupdocs.comparison.options.load.LoadOptions;
 import com.groupdocs.comparison.options.style.DetalisationLevel;
 import com.groupdocs.comparison.result.ChangeInfo;
+import com.groupdocs.comparison.result.PageInfo;
 import com.groupdocs.comparison.utils.common.Path;
 import com.groupdocs.ui.comparison.model.request.CompareRequest;
+import com.groupdocs.ui.comparison.model.response.ChangeInfoEntity;
 import com.groupdocs.ui.comparison.model.response.CompareResultResponse;
 import com.groupdocs.ui.config.DefaultDirectories;
 import com.groupdocs.ui.config.GlobalConfiguration;
@@ -149,68 +151,66 @@ public class ComparisonServiceImpl implements ComparisonService {
     public LoadDocumentEntity loadDocumentDescription(LoadDocumentPageRequest loadDocumentPageRequest) {
         final String documentGuid = loadDocumentPageRequest.getGuid();
         final String password = loadDocumentPageRequest.getPassword();
-        return loadDocumentPages(documentGuid, password, comparisonConfiguration.getPreloadResultPageCount() == 0);
+        return loadDocumentPages(documentGuid, password, 0);
     }
 
     private CompareResultResponse compareTwoDocuments(CompareRequest compareRequest) throws FileNotFoundException {
         // to get correct coordinates we will compare document twice
         // this is a first comparing to get correct coordinates of the insertions and style changes
-        String extension = "." + Utils.parseFileExtension(compareRequest.getGuids().get(0).getGuid());
+        final String fileExt = parseFileExtension(compareRequest.getGuids().get(0).getGuid());
+        String extension = "." + fileExt;
         String guid = UUID.randomUUID().toString();
         //save all results in file
-        String resultGuid = Path.combine(comparisonConfiguration.getResultDirectory(), guid + extension);
+        String[] resultGuid = new String[]{Path.combine(comparisonConfiguration.getResultDirectory(), guid + extension)};
 
         Comparer compareResult = compareFiles(compareRequest, resultGuid);
         ChangeInfo[] changes = compareResult.getChanges();
+        List<ChangeInfoEntity> changeInfoEntities = new ArrayList<>();
+        for (ChangeInfo changeInfo : changes) {
+            changeInfoEntities.add(new ChangeInfoEntity(changeInfo));
+        }
 
-        CompareResultResponse compareResultResponse = getCompareResultResponse(changes, resultGuid);
-        compareResultResponse.setExtension(extension);
+        CompareResultResponse compareResultResponse = getCompareResultResponse(changeInfoEntities.toArray(new ChangeInfoEntity[0]), resultGuid[0]);
+        compareResultResponse.setExtension(fileExt);
         return compareResultResponse;
     }
 
-    private CompareResultResponse getCompareResultResponse(ChangeInfo[] changes, String resultGuid) {
+    private CompareResultResponse getCompareResultResponse(ChangeInfoEntity[] changes, String resultGuid) {
         CompareResultResponse compareResultResponse = new CompareResultResponse();
         compareResultResponse.setChanges(changes);
 
-        List<PageDescriptionEntity> pages = loadDocumentPages(resultGuid, "", true).getPages();
+        List<PageDescriptionEntity> pages = loadDocumentPages(resultGuid, "",
+                /* Uncomment (and delete 0) to support preloadResultPageCount, does not work in front-end at the moment */
+                /*comparisonConfiguration.getPreloadResultPageCount()*/0).getPages();
 
         compareResultResponse.setPages(pages);
         compareResultResponse.setGuid(resultGuid);
         return compareResultResponse;
     }
 
-    public static LoadDocumentEntity loadDocumentPages(String documentGuid, String password, boolean loadAllPages) {
+    public static LoadDocumentEntity loadDocumentPages(String documentGuid, String password, int loadPagesCount) {
         LoadDocumentEntity loadDocumentEntity = new LoadDocumentEntity();
 
-        Comparer comparer = new Comparer(documentGuid, getLoadOptions(password));
-        try {
-            Map<Integer, String> pagesContent = new HashMap<>();
+        try (Comparer comparer = new Comparer(documentGuid, getLoadOptions(password))) {
             IDocumentInfo documentInfo = comparer.getSource().getDocumentInfo();
-
-            if (loadAllPages) {
-                for (int i = 0; i < documentInfo.getPageCount(); i++) {
-                    String encodedImage = getPageData(i, documentGuid, password);
-
-                    pagesContent.put(i, encodedImage);
-                }
-            }
 
             for (int i = 0; i < documentInfo.getPageCount(); i++) {
                 PageDescriptionEntity pageData = new PageDescriptionEntity();
-                pageData.setHeight(800 /*documentInfo.getPagesInfo().get(i).getHeight()*/); // Uncomment in v20.10
-                pageData.setWidth(600 /*documentInfo.getPagesInfo().get(i).getWidth()*/); // Uncomment in v20.10
-                pageData.setNumber(i + 1);
+                final PageInfo pageInfo = documentInfo.getPagesInfo().get(i);
+                pageData.setHeight(pageInfo.getHeight());
+                pageData.setWidth(pageInfo.getWidth());
+                pageData.setNumber(i);
 
-                if (pagesContent.size() > 0) {
-                    pageData.setData(pagesContent.get(i));
+                if (loadPagesCount == 0 || loadPagesCount > i) {
+                    String encodedImage = getPageData(i, documentGuid, password);
+                    pageData.setData(encodedImage);
                 }
 
                 loadDocumentEntity.getPages().add(pageData);
             }
+            loadDocumentEntity.setGuid(documentGuid);
 
             return loadDocumentEntity;
-        } finally {
-            comparer.dispose();
         }
     }
 
@@ -224,40 +224,36 @@ public class ComparisonServiceImpl implements ComparisonService {
     private static String getPageData(int pageNumber, String documentGuid, String password) {
         String encodedImage = "";
 
-        Comparer comparer = new Comparer(documentGuid, getLoadOptions(password));
-        try {
+        try (Comparer comparer = new Comparer(documentGuid, getLoadOptions(password))) {
             byte[] bytes = renderPageToMemoryStream(comparer, pageNumber);
             encodedImage = new String(Base64.getEncoder().encode(bytes)).replace("\n", "");
-        } finally {
-            comparer.dispose();
         }
 
         return encodedImage;
     }
 
     static byte[] renderPageToMemoryStream(Comparer comparer, int pageNumberToRender) {
-        ByteArrayOutputStream result = new ByteArrayOutputStream();
-        IDocumentInfo documentInfo = comparer.getSource().getDocumentInfo();
 
-        PreviewOptions previewOptions = new PreviewOptions(new Delegates.CreatePageStream() {
-            @Override
-            public OutputStream invoke(int i) {
-                return result;
-            }
-        });
+        try (ByteArrayOutputStream result = new ByteArrayOutputStream()) {
+            IDocumentInfo documentInfo = comparer.getSource().getDocumentInfo();
 
-        previewOptions.setPreviewFormat(PreviewFormats.PNG);
-        previewOptions.setPageNumbers(new int[]{pageNumberToRender + 1});
-        previewOptions.setHeight(800 /*documentInfo.getPagesInfo().get(pageNumberToRender).getHeight()*/); // Uncomment in v20.10
-        previewOptions.setWidth(600 /*documentInfo.getPagesInfo().get(pageNumberToRender).getWidth()*/); // Uncomment in v20.10
-        try {
+            PreviewOptions previewOptions = new PreviewOptions(new Delegates.CreatePageStream() {
+                @Override
+                public OutputStream invoke(int i) {
+                    return result;
+                }
+            });
+
+            previewOptions.setPreviewFormat(PreviewFormats.PNG);
+            previewOptions.setPageNumbers(new int[]{pageNumberToRender + 1});
+            final PageInfo pageInfo = documentInfo.getPagesInfo().get(pageNumberToRender);
+            previewOptions.setHeight(pageInfo.getHeight());
+            previewOptions.setWidth(pageInfo.getWidth());
             comparer.getSource().generatePreview(previewOptions);
             return result.toByteArray();
-        } finally {
-            com.groupdocs.comparison.common.Utils.closeStreams(result);
+        } catch (IOException e) {
+            throw new TotalGroupDocsException(e.getMessage(), e);
         }
-
-
     }
 
     /**
@@ -275,14 +271,15 @@ public class ComparisonServiceImpl implements ComparisonService {
 
         Comparer comparer = new Comparer(documentGuid, getLoadOptions(password));
         try {
-            IDocumentInfo info = comparer.getSource().getDocumentInfo();
+            IDocumentInfo documentInfo = comparer.getSource().getDocumentInfo();
 
             String encodedImage = getPageData(pageNumber - 1, documentGuid, password);
             loadedPage.setData(encodedImage);
 
-            loadedPage.setHeight(800 /*info.getPagesInfo().get(pageNumber - 1).getHeight()*/); // Uncomment in v20.10
-            loadedPage.setWidth(600 /*info.getPagesInfo().get(pageNumber - 1).getWidth()*/); // Uncomment in v20.10
-            loadedPage.setNumber(pageNumber);
+            final PageInfo pageInfo = documentInfo.getPagesInfo().get(pageNumber - 1);
+            loadedPage.setHeight(pageInfo.getHeight());
+            loadedPage.setWidth(pageInfo.getWidth());
+            loadedPage.setNumber(pageNumber - 1);
         } catch (Exception ex) {
             throw new TotalGroupDocsException("Exception occurred while loading result page", ex);
         } finally {
@@ -334,7 +331,7 @@ public class ComparisonServiceImpl implements ComparisonService {
         }
     }
 
-    private static Comparer compareFiles(CompareRequest compareRequest, String resultGuid) throws FileNotFoundException {
+    private static Comparer compareFiles(CompareRequest compareRequest, String[] resultGuid) throws FileNotFoundException {
         String firstPath = compareRequest.getGuids().get(0).getGuid();
         String secondPath = compareRequest.getGuids().get(1).getGuid();
 
@@ -345,12 +342,15 @@ public class ComparisonServiceImpl implements ComparisonService {
         CompareOptions compareOptions = new CompareOptions();
         compareOptions.setCalculateCoordinates(true);
 
-        if ("pdf".equals(Utils.parseFileExtension(resultGuid))) {
+        if ("pdf".equals(Utils.parseFileExtension(resultGuid[0]))) {
             compareOptions.setDetalisationLevel(DetalisationLevel.High);
         }
-        OutputStream outputStream = new FileOutputStream(resultGuid);
+        OutputStream outputStream = new FileOutputStream(resultGuid[0]);
         try {
-            comparer.compare(outputStream, compareOptions);
+            final java.nio.file.Path result = comparer.compare(outputStream, compareOptions);
+            if (result != null) {
+                resultGuid[0] = result.toString();
+            }
         } finally {
             com.groupdocs.comparison.common.Utils.closeStreams(outputStream);
         }
